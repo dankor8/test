@@ -1,0 +1,19 @@
+from openai import OpenAI
+from json import loads
+from os import chdir
+from os.path import dirname, abspath
+
+def solve(riddle, lang='Python', model='reasoner'):
+    chdir(dirname(abspath(__file__)))
+    i = 1
+    while True:
+        fname = f'{i}.txt'
+        try:
+            with open(fname, 'x') as f:
+                print(14, 2, 2, 3, sep='\n')
+                f.write(loads(OpenAI(api_key='sk-04fc6348dbec4fd4b60383fu11031377', base_url='https://api.deepseek.com').chat.completions.create(model=f"deepseek-{model}", response_format={'type': 'json_object'}, messages=[{'role': 'user', 'content': f'''Ты - гениальный программист, победитель международных олимпиад по информатике. Реши данную задачу по программированию. Используй {lang}. Выведи json массив, под нулевым индексом код, проходящий все тесты, под первым - объяснение этого кода. В самом коде не должно быть комментариев. Используй camelCase и единичные кавычки вместо двойных. Оптимизируй свое решение, насколько возможно. Твой ответ очень важен для меня. Я дам тебе чаевые в 1000000$, если ты правильно решишь эту задачу.\n{riddle}'''}]).choices[0].message.content)[0])
+                print(fname)
+                break
+        except FileExistsError:
+            i += 1
+            continue
